@@ -5,9 +5,14 @@ function initDom() {
      const addProjectForm = document.querySelector('.project-name-form');
      const addProjectDialogBox = document.querySelector('.project-dialog-box');
      const submitBtn = document.querySelector('.submit');
+     const messageDiv = document.querySelector('.message-div');
      addProjectBtn.addEventListener('click', () => {
           addProjectDialogBox.showModal();
      });
+
+     addProjectForm.addEventListener('click',(event)=>{
+            event.preventDefault();
+     })
 
      const closeBtn = document.querySelector('.close');
      closeBtn.addEventListener('click', () => {
@@ -16,8 +21,28 @@ function initDom() {
      })
 
      submitBtn.addEventListener('click', () => {
-          addProject();
-          addProjectForm.reset();
+          const projectName = document.querySelector('#project-name').value;
+          let currProjects = getProjects();
+          let flag = false; 
+
+          for (const project of currProjects){ 
+               if (project.name == projectName) {
+                      flag = true ;
+                      break;
+               }
+          }
+
+          if (flag) {
+               messageDiv.textContent = "Already exists !";
+          }
+          else {
+               messageDiv.textContent = " " ;
+               addProject();
+               addProjectForm.reset();
+               addProjectDialogBox.close();
+          }
+     
+          
      });
 }
 

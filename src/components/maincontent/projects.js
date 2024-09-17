@@ -2,21 +2,6 @@
 function Projects() {
 
     let projects = [];
-    let demoProj = {
-        name : "demo" ,
-        tasks: [{
-            name: "This is just testing stuff",
-            priority: 2,
-            date: "idkyet",
-        },
-        {
-            name: "This is just testing stuff 2",
-            priority: 1,
-            date: "idkyet",
-        }]
-    }
-    
-    projects.push(demoProj);
     
     const getProjects = ()=> projects ;
 
