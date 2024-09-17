@@ -1,6 +1,7 @@
 import { getProjects , addProjects , deleteProjects , addTask , deleteTask } from "./maincontent/projects.js"
 
 function initDom() {
+     
      const addProjectBtn = document.querySelector('.addproject-option');
      const addProjectForm = document.querySelector('.project-name-form');
      const addProjectDialogBox = document.querySelector('.project-dialog-box');
@@ -22,11 +23,12 @@ function initDom() {
 
      submitBtn.addEventListener('click', () => {
           const projectName = document.querySelector('#project-name').value;
+          
           let currProjects = getProjects();
           let flag = false; 
 
           for (const project of currProjects){ 
-               if (project.name == projectName) {
+               if (project && project.name == projectName) {
                       flag = true ;
                       break;
                }
@@ -41,9 +43,49 @@ function initDom() {
                addProjectForm.reset();
                addProjectDialogBox.close();
           }
-     
+
+     });
+
+     const submitTaskBtn = document.querySelector('.submit-task');
+     const closeTaskBtn = document.querySelector('.close-task');
+     const taskForum = document.querySelector('.tasks-name-form');
+     const addTaskDialogBox = document.querySelector('.tasks-dialog-box');
+
+     submitTaskBtn.addEventListener('click',()=>{
+          const mainContentDiv = document.querySelector('.content-container');
+          const headingDiv = mainContentDiv.querySelector('h2');
+          const projectName = headingDiv.textContent ;
+          let indx = -1 ;
+
+          const currProjects = getProjects();
+          for (let i = 0 ; i<currProjects.length ; i++) {
+                if (currProjects[i] == undefined) continue ;
+                if (currProjects[i].name == projectName) {
+                    indx = i ;
+                    break;
+                }
+          }
+          const taskName = document.querySelector('#task-name').value ;
+
+          let newTask = {
+               name : taskName ,  
+               priority: 2,
+               date: "idkyet",
+          };
+
+          if (taskName.length) {
+              addTask(newTask,indx);
+              taskForum.reset();
+              renderProject(getProjects(), indx);
+          }
           
      });
+
+     closeTaskBtn.addEventListener('click',()=>{
+           addTaskDialogBox.close();
+           taskForum.reset();
+     });
+
 }
 
 function addProject() {
@@ -100,39 +142,17 @@ function addProject() {
      newProjectDivContainer.appendChild(newProjectDiv);
      newProjectDivContainer.appendChild(deleteBtn);
      projectDiv.appendChild(newProjectDivContainer);
+
 }
 
 function addTaskFunctionality(projectIndx) {
 
        const addTaskBtn = document.createElement('button');
-       addTaskBtn.textContent = "ADD TASK";
-       
-       const submitBtn = document.querySelector('.submit-task');
-       const closeBtn = document.querySelector('.close-task');
-       const taskForum = document.querySelector('.tasks-name-form');
        const addTaskDialog = document.querySelector('.tasks-dialog-box');
+       addTaskBtn.textContent = "ADD TASK";
 
        addTaskBtn.addEventListener('click',()=>{
             addTaskDialog.showModal();
-       });
-
-       closeBtn.addEventListener('click',()=>{
-            addTaskDialog.close();
-            taskForum.reset();
-       });
-
-       submitBtn.addEventListener('click',()=>{
-          const taskName = document.querySelector('#task-name').value ;
-           let newTask = {
-                name : taskName ,  
-                priority: 2,
-                date: "idkyet",
-           };
-          if (taskName.length) {
-               addTask(newTask,projectIndx);
-               taskForum.reset();
-               renderProject(getProjects(), projectIndx);
-          }
        });
 
        const mainContentDiv = document.querySelector('.content-container');
@@ -141,6 +161,7 @@ function addTaskFunctionality(projectIndx) {
 }
 
 function renderProject(projectarr , projectIndx) {
+
      const project = projectarr[projectIndx] ;
      const mainContentDiv = document.querySelector('.content-container');
      const projectName = project.name;
@@ -149,22 +170,18 @@ function renderProject(projectarr , projectIndx) {
      heading.textContent = projectName;
      mainContentDiv.textContent = " ";
      mainContentDiv.appendChild(heading);
-     let indx = 0 ;
 
-     for (const task of tasks) {
+     for (let i = 0 ; i < tasks.length ; i++) {
 
-          // if (task == undefined) {
-          //       indx = indx + 1;
-          //       continue ;
-          // }
+          const task = tasks[i];
+          if (task == undefined) {
+                continue ;
+          }
 
           const genericTodo = document.createElement('div');
           const taskName = document.createElement('p');
           taskName.textContent = task.name;
-          taskName.dataset.index = indx; 
-          // indx = indx + 1; 
-          
-
+     
           const redGreenBtn = document.createElement('button');
           redGreenBtn.textContent = "Done";
           const deleteBtn = document.createElement('button');
@@ -180,11 +197,11 @@ function renderProject(projectarr , projectIndx) {
 
           mainContentDiv.appendChild(genericTodo);
 
-          // deleteBtn.addEventListener('click',()=>{
-          //       mainContentDiv.removeChild(genericTodo);
-          //       deleteTask(projectIndx,indx-1);
-          //       console.log(projectarr[projectIndx]);
-          // })
+          deleteBtn.addEventListener('click',()=>{
+                mainContentDiv.removeChild(genericTodo);
+                deleteTask(projectIndx,i);
+          }); 
+
      }
 
      addTaskFunctionality(projectIndx);
