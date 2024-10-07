@@ -1,5 +1,5 @@
 
-import { getProjects, deleteTask , toggleTaskDone , checkTaskDone } from "./projects.js"
+import { getProjects, deleteTask, toggleTaskDone, checkTaskDone , getPriority , changePriority} from "./projects.js"
 function generateSideBar() {
      const sidebarContainer = document.querySelector('.sidebar');
      const container1 = document.createElement('div');
@@ -42,6 +42,7 @@ function generateSideBar() {
      sidebarContainer.appendChild(container2);
 
      todayTasks.addEventListener('click', todayTaskGenerator);
+     importantTasks.addEventListener('click',importantTaskGenerator);
 }
 
 function getTodaysDate() {
@@ -52,6 +53,105 @@ function getTodaysDate() {
      let day = dateObj.getDate();
      if (day <= 9) day = "0" + day;
      return (year + "-" + month + "-" + day);
+}
+
+function importantTaskGenerator() {
+     const currProjects = getProjects();
+     const mainContentDiv = document.querySelector('.content-container');
+     mainContentDiv.textContent = " ";
+
+     for (let i = 0; i < currProjects.length; i++) {
+
+          if (currProjects[i] == undefined) continue;
+
+          let currTasks = currProjects[i].tasks;
+
+          for (let j = 0; j < currTasks.length; j++) {
+
+               if (currTasks[j] == undefined) continue;
+
+               let currPriority = currTasks[j].priority ;
+               if (currPriority) {
+
+                    const task = currTasks[j];
+                    const genericTodo = document.createElement('div');
+                    const taskName = document.createElement('p');
+                    const date = document.createElement('p');
+                    date.textContent = task.date;
+                    taskName.textContent = task.name;
+
+                    const redGreenBtn = document.createElement('div');
+                    const deleteBtn = document.createElement('div');
+                    const doneFlag = task.done;
+
+                    if (doneFlag) {
+                         redGreenBtn.textContent = "Done";
+                         redGreenBtn.classList.add('green');
+                    }
+                    else {
+                         redGreenBtn.textContent = "Undone";
+                         redGreenBtn.classList.add('red');
+                    }
+
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.classList.add('delete-btn');
+                    redGreenBtn.classList.add('done-btn');
+                    genericTodo.classList.add('todo');
+
+                    genericTodo.appendChild(taskName);
+
+                    genericTodo.appendChild(redGreenBtn);
+                    genericTodo.classList.add('task-div');
+
+                    genericTodo.appendChild(deleteBtn);
+                    genericTodo.appendChild(date);
+
+                    const priorityInput = document.createElement('input');
+                    priorityInput.type = "checkbox";
+                    priorityInput.id = i;
+                    const priorityInputLabel = document.createElement('label');
+                    priorityInputLabel.textContent = "Priority Task";
+                    priorityInputLabel.for = i;
+                    const priorityBox = document.createElement('div');
+                    priorityBox.classList.add('priority-box');
+                    priorityBox.appendChild(priorityInput);
+                    priorityBox.appendChild(priorityInputLabel);
+
+                    const currPriority = getPriority(i,j);
+                    if (currPriority == true) {
+                         priorityInput.checked = true;
+                    }
+
+                    genericTodo.appendChild(priorityBox);
+
+                    priorityInput.addEventListener("change", () => {
+                         changePriority(i,j);
+                    });
+
+                    mainContentDiv.appendChild(genericTodo);
+
+                    deleteBtn.addEventListener('click', () => {
+                         mainContentDiv.removeChild(genericTodo);
+                         deleteTask(i, j);
+                    });
+
+                    redGreenBtn.addEventListener('click', () => {
+                         const currTaskDone = checkTaskDone(i, j);
+                         if (currTaskDone) {
+                              redGreenBtn.classList.remove('green');
+                              redGreenBtn.classList.add('red');
+                              redGreenBtn.textContent = "Undone";
+                         }
+                         else {
+                              redGreenBtn.classList.add('green');
+                              redGreenBtn.classList.remove('red');
+                              redGreenBtn.textContent = "Done";
+                         }
+                         toggleTaskDone(i, j);
+                    })
+               }
+          }
+     }
 }
 
 function todayTaskGenerator() {
@@ -68,7 +168,7 @@ function todayTaskGenerator() {
           let currTasks = currProjects[i].tasks;
 
           for (let j = 0; j < currTasks.length; j++) {
-               
+
                if (currTasks[j] == undefined) continue;
 
                let currDate = currTasks[j].date;
@@ -107,11 +207,33 @@ function todayTaskGenerator() {
                     genericTodo.appendChild(deleteBtn);
                     genericTodo.appendChild(date);
 
+                    const priorityInput = document.createElement('input');
+                    priorityInput.type = "checkbox";
+                    priorityInput.id = i;
+                    const priorityInputLabel = document.createElement('label');
+                    priorityInputLabel.textContent = "Priority Task";
+                    priorityInputLabel.for = i;
+                    const priorityBox = document.createElement('div');
+                    priorityBox.classList.add('priority-box');
+                    priorityBox.appendChild(priorityInput);
+                    priorityBox.appendChild(priorityInputLabel);
+
+                    const currPriority = getPriority(i,j);
+                    if (currPriority == true) {
+                         priorityInput.checked = true;
+                    }
+
+                    genericTodo.appendChild(priorityBox);
+
+                    priorityInput.addEventListener("change", () => {
+                         changePriority(i,j);
+                    });
+
                     mainContentDiv.appendChild(genericTodo);
 
                     deleteBtn.addEventListener('click', () => {
                          mainContentDiv.removeChild(genericTodo);
-                         deleteTask(i,j);
+                         deleteTask(i, j);
                     });
 
                     redGreenBtn.addEventListener('click', () => {
@@ -126,7 +248,7 @@ function todayTaskGenerator() {
                               redGreenBtn.classList.remove('red');
                               redGreenBtn.textContent = "Done";
                          }
-                         toggleTaskDone(i,j);
+                         toggleTaskDone(i, j);
                     })
                }
           }

@@ -29,6 +29,14 @@ function Projects() {
           return projects[projectIndx].tasks[taskIndx].done ;
     }
 
+    const changePriority = (projectIndx , taskIndx) => {
+           projects[projectIndx].tasks[taskIndx].priority = !projects[projectIndx].tasks[taskIndx].priority ;
+    }
+
+    const getPriority = (projectIndx , taskIndx) => {
+          return projects[projectIndx].tasks[taskIndx].priority 
+    }
+
 
     return {
          getProjects , 
@@ -38,9 +46,11 @@ function Projects() {
          deleteTask ,
          toggleTaskDone ,
          checkTaskDone,
+         changePriority , 
+         getPriority ,
     }
 }
 
-const { getProjects , addProjects , deleteProjects , addTask  , deleteTask , toggleTaskDone , checkTaskDone} = Projects();
+const { getProjects , addProjects , deleteProjects , addTask  , deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority} = Projects();
 
-export { getProjects , addProjects , deleteProjects , addTask , deleteTask , toggleTaskDone , checkTaskDone} ;
+export { getProjects , addProjects , deleteProjects , addTask , deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority} ;

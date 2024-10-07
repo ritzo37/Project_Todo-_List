@@ -1,4 +1,4 @@
-import { getProjects, addProjects, deleteProjects, addTask, deleteTask , toggleTaskDone , checkTaskDone} from "./projects.js"
+import { getProjects, addProjects, deleteProjects, addTask, deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority} from "./projects.js"
 
 function initDom() {
 
@@ -77,10 +77,11 @@ function initDom() {
           else {
                let newTask = {
                     name: taskName,
-                    priority: true,
+                    priority: false ,
                     date: date,
                     done : false, 
                };
+
 
                if (taskName.length) {
                     addTask(newTask, indx);
@@ -135,13 +136,13 @@ function addProject() {
           name: projectName,
           tasks: [{
                name: "This is just testing stuff",
-               priority: 2,
+               priority: false,
                date: "idkyet",
                done:  false ,
           },
           {
                name: "This is just testing stuff 2",
-               priority: 1,
+               priority: false,
                date: "idkyet",
                done: false ,
           }]
@@ -203,6 +204,7 @@ function renderProject(projectarr, projectIndx) {
           const redGreenBtn = document.createElement('div');
           const deleteBtn = document.createElement('div');
           const doneFlag = task.done ;
+
           if (doneFlag){
                redGreenBtn.textContent = "Done";
                redGreenBtn.classList.add('green');
@@ -224,6 +226,29 @@ function renderProject(projectarr, projectIndx) {
         
           genericTodo.appendChild(deleteBtn); 
           genericTodo.appendChild(date);
+
+          const priorityInput = document.createElement('input');
+          priorityInput.type = "checkbox";
+          priorityInput.id = i ;
+          const priorityInputLabel = document.createElement('label');
+          priorityInputLabel.textContent = "Priority Task" ;
+          priorityInputLabel.for = i ;
+          const priorityBox = document.createElement('div');
+          priorityBox.classList.add('priority-box');
+          priorityBox.appendChild(priorityInput);
+          priorityBox.appendChild(priorityInputLabel);
+
+          const currPriority = getPriority(projectIndx , i);
+          if (currPriority == true) {
+                priorityInput.checked = true ;
+          }
+
+          genericTodo.appendChild(priorityBox);
+
+          priorityInput.addEventListener("change",()=>{
+                changePriority(projectIndx , i);
+          })
+
 
           mainContentDiv.appendChild(genericTodo);
 

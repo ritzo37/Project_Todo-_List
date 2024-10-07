@@ -5,7 +5,6 @@ import {initDom} from "./components/DOM.js" ;
 
 function display() {
      generateSideBar();
-     testingTodo();
      initDom();
 }
 

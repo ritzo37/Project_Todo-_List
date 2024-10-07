@@ -92,7 +92,7 @@ body {
 
 .task-div {
      display: flex;
-     flex-direction: column;
+     flex-direction: column ;
      gap : 5px ;
      align-items: start;
 }
@@ -106,3 +106,11 @@ body {
      border : 2px solid black;
      margin : 20px;
 }
+
+.priority-box  {
+      display : flex;
+      flex-direction:  row;
+      gap : 10px;
+      font : 32px;
+}
+
