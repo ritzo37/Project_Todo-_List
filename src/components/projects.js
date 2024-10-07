@@ -21,6 +21,14 @@ function Projects() {
           projects[projectIndx].tasks[taskIndx] = undefined ;
     }
 
+    const toggleTaskDone = (projectIndx , taskIndx) => {
+          projects[projectIndx].tasks[taskIndx].done = !projects[projectIndx].tasks[taskIndx].done ;
+    }
+
+    const checkTaskDone = (projectIndx , taskIndx) => {
+          return projects[projectIndx].tasks[taskIndx].done ;
+    }
+
 
     return {
          getProjects , 
@@ -28,9 +36,11 @@ function Projects() {
          deleteProjects ,
          addTask ,
          deleteTask ,
+         toggleTaskDone ,
+         checkTaskDone,
     }
 }
 
-const { getProjects , addProjects , deleteProjects , addTask  , deleteTask} = Projects();
+const { getProjects , addProjects , deleteProjects , addTask  , deleteTask , toggleTaskDone , checkTaskDone} = Projects();
 
-export { getProjects , addProjects , deleteProjects , addTask , deleteTask} ;
+export { getProjects , addProjects , deleteProjects , addTask , deleteTask , toggleTaskDone , checkTaskDone} ;
