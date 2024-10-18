@@ -114,3 +114,8 @@ body {
       font : 32px;
 }
 
+.taskNameFormDiv {
+      padding : 50px; 
+      display: flex;
+}
+

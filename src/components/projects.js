@@ -36,6 +36,14 @@ function Projects() {
     const getPriority = (projectIndx , taskIndx) => {
           return projects[projectIndx].tasks[taskIndx].priority 
     }
+    
+    const changeTaskName = (projectIndx , taskIndx, name) =>{
+          projects[projectIndx].tasks[taskIndx].name =  name ;
+    }
+
+    const changeTaskDate = (projectIndx , taskIndx , newDate) => {
+         projects[projectIndx].tasks[taskIndx].date = newDate ;
+    }
 
 
     return {
@@ -48,9 +56,11 @@ function Projects() {
          checkTaskDone,
          changePriority , 
          getPriority ,
+         changeTaskName , 
+         changeTaskDate  ,
     }
 }
 
-const { getProjects , addProjects , deleteProjects , addTask  , deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority} = Projects();
+const { getProjects , addProjects , deleteProjects , addTask  , deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority , changeTaskDate , changeTaskName} = Projects();
 
-export { getProjects , addProjects , deleteProjects , addTask , deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority} ;
+export { getProjects , addProjects , deleteProjects , addTask , deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority, changeTaskDate , changeTaskName} ;
