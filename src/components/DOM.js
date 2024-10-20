@@ -46,6 +46,46 @@ function initDom() {
 
      });
 
+     const currProjects = getProjects();
+     if (currProjects.length) {
+
+          for (let i = 0 ; i<currProjects.length ; i++) {
+               
+               let project = currProjects[i];
+
+               if (project == undefined) continue;
+
+               const projectDiv = document.querySelector('.Project-container');
+               const newProjectDivContainer = document.createElement('div');
+               const projectName = project.name;
+               const newProjectDiv = document.createElement('div');
+          
+               const projectIndx = i ;
+               newProjectDiv.classList.add('options');
+               newProjectDiv.textContent = projectName;
+               newProjectDiv.dataset.data = projectIndx;
+          
+               const deleteBtn = document.createElement('button');
+               deleteBtn.textContent = "Delete";
+          
+               deleteBtn.addEventListener('click', () => {
+                    projectDiv.removeChild(newProjectDivContainer);
+                    deleteProjects(projectIndx);
+                    const mainContentDiv = document.querySelector('.content-container');
+                    mainContentDiv.textContent = " ";
+               })
+          
+               newProjectDivContainer.classList.add('newprojectdiv');
+               newProjectDiv.addEventListener('click', () => {
+                    renderProject(getProjects(), projectIndx);
+               });
+          
+               newProjectDivContainer.appendChild(newProjectDiv);
+               newProjectDivContainer.appendChild(deleteBtn);
+               projectDiv.appendChild(newProjectDivContainer);
+          }
+     }
+
 
 }
 

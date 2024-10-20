@@ -1,66 +1,86 @@
 
 function Projects() {
 
-    let projects = [];
-    
-    const getProjects = ()=> projects ;
+      let projects;
+      try {
+            if (localStorage.getItem("projects")) {
+                  projects = JSON.parse(localStorage.getItem("projects"));
+            }
+            else {
+                  projects = [];
+            }
+      }
+      catch (e) {
+            projects = [];
+      }
 
-    const addProjects = (project)=> {
-          projects.push(project);
-    }
+      const getProjects = () => {
+            return projects;
+      }
 
-    const deleteProjects = (projectIndx)=> {
-         projects[projectIndx] = undefined ;
-    }
+      const addProjects = (project) => {
+            projects.push(project);
+            localStorage.setItem("projects", JSON.stringify(projects));
+      }
 
-    const addTask = (newTask , indx)=>{
-          projects[indx].tasks.push(newTask);
-    }
+      const deleteProjects = (projectIndx) => {
+            projects[projectIndx] = undefined;
+            localStorage.setItem("projects", JSON.stringify(projects));
+      }
 
-    const deleteTask = (projectIndx, taskIndx)=> {
-          projects[projectIndx].tasks[taskIndx] = undefined ;
-    }
+      const addTask = (newTask, indx) => {
+            projects[indx].tasks.push(newTask);
+            localStorage.setItem("projects", JSON.stringify(projects));
+      }
 
-    const toggleTaskDone = (projectIndx , taskIndx) => {
-          projects[projectIndx].tasks[taskIndx].done = !projects[projectIndx].tasks[taskIndx].done ;
-    }
+      const deleteTask = (projectIndx, taskIndx) => {
+            projects[projectIndx].tasks[taskIndx] = undefined;
+            localStorage.setItem("projects", JSON.stringify(projects));
+      }
 
-    const checkTaskDone = (projectIndx , taskIndx) => {
-          return projects[projectIndx].tasks[taskIndx].done ;
-    }
+      const toggleTaskDone = (projectIndx, taskIndx) => {
+            projects[projectIndx].tasks[taskIndx].done = !projects[projectIndx].tasks[taskIndx].done;
+            localStorage.setItem("projects", JSON.stringify(projects));
+      }
 
-    const changePriority = (projectIndx , taskIndx) => {
-           projects[projectIndx].tasks[taskIndx].priority = !projects[projectIndx].tasks[taskIndx].priority ;
-    }
+      const checkTaskDone = (projectIndx, taskIndx) => {
+            return projects[projectIndx].tasks[taskIndx].done;
+      }
 
-    const getPriority = (projectIndx , taskIndx) => {
-          return projects[projectIndx].tasks[taskIndx].priority 
-    }
-    
-    const changeTaskName = (projectIndx , taskIndx, name) =>{
-          projects[projectIndx].tasks[taskIndx].name =  name ;
-    }
+      const changePriority = (projectIndx, taskIndx) => {
+            projects[projectIndx].tasks[taskIndx].priority = !projects[projectIndx].tasks[taskIndx].priority;
+      }
 
-    const changeTaskDate = (projectIndx , taskIndx , newDate) => {
-         projects[projectIndx].tasks[taskIndx].date = newDate ;
-    }
+      const getPriority = (projectIndx, taskIndx) => {
+            return projects[projectIndx].tasks[taskIndx].priority;
+      }
+
+      const changeTaskName = (projectIndx, taskIndx, name) => {
+            projects[projectIndx].tasks[taskIndx].name = name;
+            localStorage.setItem("projects", JSON.stringify(projects));
+      }
+
+      const changeTaskDate = (projectIndx, taskIndx, newDate) => {
+            projects[projectIndx].tasks[taskIndx].date = newDate;
+            localStorage.setItem("projects", JSON.stringify(projects));
+      }
 
 
-    return {
-         getProjects , 
-         addProjects , 
-         deleteProjects ,
-         addTask ,
-         deleteTask ,
-         toggleTaskDone ,
-         checkTaskDone,
-         changePriority , 
-         getPriority ,
-         changeTaskName , 
-         changeTaskDate  ,
-    }
+      return {
+            getProjects,
+            addProjects,
+            deleteProjects,
+            addTask,
+            deleteTask,
+            toggleTaskDone,
+            checkTaskDone,
+            changePriority,
+            getPriority,
+            changeTaskName,
+            changeTaskDate,
+      }
 }
 
-const { getProjects , addProjects , deleteProjects , addTask  , deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority , changeTaskDate , changeTaskName} = Projects();
+const { getProjects, addProjects, deleteProjects, addTask, deleteTask, toggleTaskDone, checkTaskDone, changePriority, getPriority, changeTaskDate, changeTaskName } = Projects();
 
-export { getProjects , addProjects , deleteProjects , addTask , deleteTask , toggleTaskDone , checkTaskDone , changePriority , getPriority, changeTaskDate , changeTaskName} ;
+export { getProjects, addProjects, deleteProjects, addTask, deleteTask, toggleTaskDone, checkTaskDone, changePriority, getPriority, changeTaskDate, changeTaskName };
