@@ -37,6 +37,9 @@ function initDom() {
           if (flag) {
                messageDiv.textContent = "Already exists !";
           }
+          else if (!projectName.length) {
+               messageDiv.textContent = "Please Enter a valid Project Name !";
+          }
           else {
                messageDiv.textContent = " ";
                addProject();
@@ -49,37 +52,37 @@ function initDom() {
      const currProjects = getProjects();
      if (currProjects.length) {
 
-          for (let i = 0 ; i<currProjects.length ; i++) {
-               
+          for (let i = 0; i < currProjects.length; i++) {
+
                let project = currProjects[i];
 
-               if (project == undefined) continue;
+               if (!project) continue;
 
                const projectDiv = document.querySelector('.Project-container');
                const newProjectDivContainer = document.createElement('div');
                const projectName = project.name;
                const newProjectDiv = document.createElement('div');
-          
-               const projectIndx = i ;
+
+               const projectIndx = i;
                newProjectDiv.classList.add('options');
                newProjectDiv.textContent = projectName;
                newProjectDiv.dataset.data = projectIndx;
-          
+
                const deleteBtn = document.createElement('button');
                deleteBtn.textContent = "Delete";
-          
+
                deleteBtn.addEventListener('click', () => {
                     projectDiv.removeChild(newProjectDivContainer);
                     deleteProjects(projectIndx);
                     const mainContentDiv = document.querySelector('.content-container');
                     mainContentDiv.textContent = " ";
                })
-          
+
                newProjectDivContainer.classList.add('newprojectdiv');
                newProjectDiv.addEventListener('click', () => {
                     renderProject(getProjects(), projectIndx);
                });
-          
+
                newProjectDivContainer.appendChild(newProjectDiv);
                newProjectDivContainer.appendChild(deleteBtn);
                projectDiv.appendChild(newProjectDivContainer);
@@ -119,13 +122,13 @@ function addProject() {
           tasks: [{
                name: "This is just testing stuff",
                priority: false,
-               date: "idkyet",
+               date: "2024-10-10",
                done: false,
           },
           {
                name: "This is just testing stuff 2",
                priority: false,
-               date: "idkyet",
+               date: "2024-10-10",
                done: false,
           }]
      }
@@ -143,7 +146,7 @@ function addProject() {
 
 }
 
-function addTaskFunctionality(projectIndx) {
+function addTaskFunctionality() {
 
      const mainContentDiv = document.querySelector('.content-container');
      const addTaskBtn = document.createElement('button');
@@ -203,7 +206,7 @@ function addTaskFunctionality(projectIndx) {
 
                     const currProjects = getProjects();
                     for (let i = 0; i < currProjects.length; i++) {
-                         if (currProjects[i] == undefined) continue;
+                         if (!currProjects[i]) continue;
                          if (currProjects[i].name == projectName) {
                               indx = i;
                               break;
@@ -310,7 +313,7 @@ function generateEditForm(projectIndx, taskIndx) {
                     const taskNameEle = document.querySelector(`[data-task="${taskIndx}"] .taskName`);
                     const taskDateEle = document.querySelector(`[data-task="${taskIndx}"] .taskDate`);
                     taskNameEle.textContent = newName;
-                    taskDateEle.textContent = newDate ;
+                    taskDateEle.textContent = newDate;
 
 
                     const formCheck = document.querySelector('.edit-form-div');
@@ -347,118 +350,122 @@ function generateEditForm(projectIndx, taskIndx) {
 
 }
 
+function renderTask(task, projectIndx, taskIndx) {
+     
+     const mainContentDiv = document.querySelector('.content-container');
+     const genericTodo = document.createElement('div');
+     genericTodo.dataset.task = taskIndx;
+     const taskName = document.createElement('p');
+     const date = document.createElement('p');
+     taskName.classList.add('taskName');
+     date.classList.add('taskDate');
+     date.textContent = task.date;
+     taskName.textContent = task.name;
+
+     const redGreenBtn = document.createElement('div');
+     const deleteBtn = document.createElement('div');
+     const doneFlag = task.done;
+
+     if (doneFlag) {
+          redGreenBtn.textContent = "Done";
+          redGreenBtn.classList.add('green');
+     }
+     else {
+          redGreenBtn.textContent = "Undone";
+          redGreenBtn.classList.add('red');
+     }
+
+     deleteBtn.textContent = "Delete";
+     deleteBtn.classList.add('delete-btn');
+     redGreenBtn.classList.add('done-btn');
+     genericTodo.classList.add('todo');
+
+     genericTodo.appendChild(taskName);
+
+     genericTodo.appendChild(redGreenBtn);
+     genericTodo.classList.add('task-div');
+
+     genericTodo.appendChild(deleteBtn);
+     genericTodo.appendChild(date);
+
+     const priorityInput = document.createElement('input');
+     priorityInput.type = "checkbox";
+     priorityInput.id = taskIndx;
+     const priorityInputLabel = document.createElement('label');
+     priorityInputLabel.textContent = "Priority Task";
+     priorityInputLabel.for = taskIndx;
+     const priorityBox = document.createElement('div');
+     priorityBox.classList.add('priority-box');
+     priorityBox.appendChild(priorityInput);
+     priorityBox.appendChild(priorityInputLabel);
+
+     const currPriority = getPriority(projectIndx, taskIndx);
+     if (currPriority == true) {
+          priorityInput.checked = true;
+     }
+
+     genericTodo.appendChild(priorityBox);
+
+     priorityInput.addEventListener("change", () => {
+          changePriority(projectIndx, taskIndx);
+     })
+
+     const editBtn = document.createElement('button');
+     editBtn.textContent = "Edit";
+
+     editBtn.addEventListener('click', () => {
+          generateEditForm(projectIndx, taskIndx);
+     });
+
+     deleteBtn.addEventListener('click', () => {
+          mainContentDiv.removeChild(genericTodo);
+          deleteTask(projectIndx, taskIndx);
+     });
+
+     redGreenBtn.addEventListener('click', () => {
+          const currTaskDone = checkTaskDone(projectIndx, taskIndx);
+          if (currTaskDone) {
+               redGreenBtn.classList.remove('green');
+               redGreenBtn.classList.add('red');
+               redGreenBtn.textContent = "Undone";
+          }
+          else {
+               redGreenBtn.classList.add('green');
+               redGreenBtn.classList.remove('red');
+               redGreenBtn.textContent = "Done";
+          }
+          toggleTaskDone(projectIndx, taskIndx);
+     })
+
+
+     genericTodo.appendChild(editBtn);
+     mainContentDiv.appendChild(genericTodo);
+}
+
+function renderTasks(projectIndx) {
+     const projects = getProjects();
+     const currProject = projects[projectIndx];
+     const tasks = currProject.tasks;
+     for (let i = 0; i < tasks.length; i++) {
+          const task = tasks[i];
+          if (task) {
+                renderTask(task,projectIndx,i);
+          }
+     }
+}
+
 function renderProject(projectarr, projectIndx) {
 
      const project = projectarr[projectIndx];
      const mainContentDiv = document.querySelector('.content-container');
      const projectName = project.name;
-     const tasks = project.tasks;
      const heading = document.createElement('div');
      heading.classList.add('project-heading');
      heading.textContent = projectName;
      mainContentDiv.textContent = " ";
      mainContentDiv.appendChild(heading);
-
-     for (let i = 0; i < tasks.length; i++) {
-
-          const task = tasks[i];
-          if (task == undefined) {
-               continue;
-          }
-
-          const genericTodo = document.createElement('div');
-          genericTodo.dataset.task = i;
-          const taskName = document.createElement('p');
-          const date = document.createElement('p');
-          taskName.classList.add('taskName');
-          date.classList.add('taskDate');
-          date.textContent = task.date;
-          taskName.textContent = task.name;
-
-          const redGreenBtn = document.createElement('div');
-          const deleteBtn = document.createElement('div');
-          const doneFlag = task.done;
-
-          if (doneFlag) {
-               redGreenBtn.textContent = "Done";
-               redGreenBtn.classList.add('green');
-          }
-          else {
-               redGreenBtn.textContent = "Undone";
-               redGreenBtn.classList.add('red');
-          }
-
-          deleteBtn.textContent = "Delete";
-          deleteBtn.classList.add('delete-btn');
-          redGreenBtn.classList.add('done-btn');
-          genericTodo.classList.add('todo');
-
-          genericTodo.appendChild(taskName);
-
-          genericTodo.appendChild(redGreenBtn);
-          genericTodo.classList.add('task-div');
-
-          genericTodo.appendChild(deleteBtn);
-          genericTodo.appendChild(date);
-
-          const priorityInput = document.createElement('input');
-          priorityInput.type = "checkbox";
-          priorityInput.id = i;
-          const priorityInputLabel = document.createElement('label');
-          priorityInputLabel.textContent = "Priority Task";
-          priorityInputLabel.for = i;
-          const priorityBox = document.createElement('div');
-          priorityBox.classList.add('priority-box');
-          priorityBox.appendChild(priorityInput);
-          priorityBox.appendChild(priorityInputLabel);
-
-          const currPriority = getPriority(projectIndx, i);
-          if (currPriority == true) {
-               priorityInput.checked = true;
-          }
-
-          genericTodo.appendChild(priorityBox);
-
-          priorityInput.addEventListener("change", () => {
-               changePriority(projectIndx, i);
-          })
-
-          const editBtn = document.createElement('button');
-          editBtn.textContent = "Edit";
-
-          editBtn.addEventListener('click', () => {
-               generateEditForm(projectIndx, i);
-          });
-
-          deleteBtn.addEventListener('click', () => {
-               mainContentDiv.removeChild(genericTodo);
-               deleteTask(projectIndx, i);
-          });
-
-          redGreenBtn.addEventListener('click', () => {
-               const currTaskDone = checkTaskDone(projectIndx, i);
-               if (currTaskDone) {
-                    redGreenBtn.classList.remove('green');
-                    redGreenBtn.classList.add('red');
-                    redGreenBtn.textContent = "Undone";
-               }
-               else {
-                    redGreenBtn.classList.add('green');
-                    redGreenBtn.classList.remove('red');
-                    redGreenBtn.textContent = "Done";
-               }
-               toggleTaskDone(projectIndx, i);
-          })
-
-
-          genericTodo.appendChild(editBtn);
-          mainContentDiv.appendChild(genericTodo);
-
-
-     }
-
+     renderTasks(projectIndx);
      addTaskFunctionality(projectIndx);
-
 }
 
-export { initDom };
+export { initDom, generateEditForm, renderTask , renderTasks};

@@ -3,15 +3,14 @@ function Projects() {
 
       let projects;
       try {
-            if (localStorage.getItem("projects")) {
-                  projects = JSON.parse(localStorage.getItem("projects"));
-            }
-            else {
-                  projects = [];
-            }
+            projects = JSON.parse(localStorage.getItem("projects")) || [];
       }
       catch (e) {
             projects = [];
+      }
+
+      const saveToLocalStorage = (projects) => {
+           localStorage.setItem("projects", JSON.stringify(projects));
       }
 
       const getProjects = () => {
@@ -20,27 +19,27 @@ function Projects() {
 
       const addProjects = (project) => {
             projects.push(project);
-            localStorage.setItem("projects", JSON.stringify(projects));
+            saveToLocalStorage(projects); 
       }
 
       const deleteProjects = (projectIndx) => {
-            projects[projectIndx] = undefined;
-            localStorage.setItem("projects", JSON.stringify(projects));
+            projects[projectIndx] = null;
+            saveToLocalStorage(projects); 
       }
 
       const addTask = (newTask, indx) => {
             projects[indx].tasks.push(newTask);
-            localStorage.setItem("projects", JSON.stringify(projects));
+            saveToLocalStorage(projects); 
       }
 
       const deleteTask = (projectIndx, taskIndx) => {
-            projects[projectIndx].tasks[taskIndx] = undefined;
-            localStorage.setItem("projects", JSON.stringify(projects));
+            projects[projectIndx].tasks[taskIndx] = null;
+            saveToLocalStorage(projects); 
       }
 
       const toggleTaskDone = (projectIndx, taskIndx) => {
             projects[projectIndx].tasks[taskIndx].done = !projects[projectIndx].tasks[taskIndx].done;
-            localStorage.setItem("projects", JSON.stringify(projects));
+            saveToLocalStorage(projects); 
       }
 
       const checkTaskDone = (projectIndx, taskIndx) => {
@@ -49,6 +48,7 @@ function Projects() {
 
       const changePriority = (projectIndx, taskIndx) => {
             projects[projectIndx].tasks[taskIndx].priority = !projects[projectIndx].tasks[taskIndx].priority;
+            saveToLocalStorage(projects);
       }
 
       const getPriority = (projectIndx, taskIndx) => {
@@ -57,12 +57,12 @@ function Projects() {
 
       const changeTaskName = (projectIndx, taskIndx, name) => {
             projects[projectIndx].tasks[taskIndx].name = name;
-            localStorage.setItem("projects", JSON.stringify(projects));
+            saveToLocalStorage(projects); 
       }
 
       const changeTaskDate = (projectIndx, taskIndx, newDate) => {
             projects[projectIndx].tasks[taskIndx].date = newDate;
-            localStorage.setItem("projects", JSON.stringify(projects));
+            saveToLocalStorage(projects); 
       }
 
 

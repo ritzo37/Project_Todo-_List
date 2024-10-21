@@ -1,27 +1,17 @@
-
-function testingTodo() {
+import { getProjects, deleteTask, toggleTaskDone, checkTaskDone, changePriority, getPriority, changeTaskName, changeTaskDate } from "./projects.js"
+import {renderTasks} from "./DOM.js"
+function generateAllTasks() {
     const mainContentDiv = document.querySelector('.content-container');
-    const genericTodo = document.createElement('div');
-    const taskName = document.createElement('p');
-    taskName.textContent = "This is just a testing TODO";
-    const redGreenBtn = document.createElement('button');
-    redGreenBtn.textContent = "Done";
- 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = "Delete";
-    
-    redGreenBtn.classList.add('red-green-btn');
-    deleteBtn.classList.add('delete-btn');
-    genericTodo.classList.add('todo');
-
-    genericTodo.appendChild(taskName);
-    genericTodo.appendChild(redGreenBtn);
-    genericTodo.appendChild(deleteBtn);
-
-    mainContentDiv.appendChild(genericTodo);
+    mainContentDiv.textContent = " ";
+    const currProjects = getProjects();
+    for (let projectIndx = 0 ; projectIndx < currProjects.length ; projectIndx++) {
+          const project = currProjects[projectIndx];
+          if (!project) continue ;
+          renderTasks(projectIndx);
+    }
 }
 
-export { testingTodo };
+export { generateAllTasks };
 
 
 

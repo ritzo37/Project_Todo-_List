@@ -1,5 +1,7 @@
 
 import { getProjects, deleteTask, toggleTaskDone, checkTaskDone , getPriority , changePriority} from "./projects.js"
+import { generateAllTasks } from "./alltasks.js";
+import { renderTask } from "./DOM.js";
 function generateSideBar() {
      const sidebarContainer = document.querySelector('.sidebar');
      const container1 = document.createElement('div');
@@ -10,6 +12,7 @@ function generateSideBar() {
 
      allTasks.classList.add('options');
      todayTasks.classList.add('options');
+     allTasks.classList.add('allTaskBtn');
      todayTasks.classList.add('today-tasks-div');
      importantTasks.classList.add('options');
      container1.classList.add('home-container');
@@ -43,6 +46,7 @@ function generateSideBar() {
 
      todayTasks.addEventListener('click', todayTaskGenerator);
      importantTasks.addEventListener('click',importantTaskGenerator);
+     allTasks.addEventListener('click',generateAllTasks);
 }
 
 function getTodaysDate() {
@@ -55,102 +59,29 @@ function getTodaysDate() {
      return (year + "-" + month + "-" + day);
 }
 
+
+
 function importantTaskGenerator() {
      const currProjects = getProjects();
      const mainContentDiv = document.querySelector('.content-container');
      mainContentDiv.textContent = " ";
-
+     let tasksExists = false ;
      for (let i = 0; i < currProjects.length; i++) {
-
-          if (currProjects[i] == undefined) continue;
-
+          if (!currProjects[i]) continue;
           let currTasks = currProjects[i].tasks;
 
           for (let j = 0; j < currTasks.length; j++) {
-
-               if (currTasks[j] == undefined) continue;
-
+               if (!currTasks[j]) continue;
                let currPriority = currTasks[j].priority ;
                if (currPriority) {
-
-                    const task = currTasks[j];
-                    const genericTodo = document.createElement('div');
-                    const taskName = document.createElement('p');
-                    const date = document.createElement('p');
-                    date.textContent = task.date;
-                    taskName.textContent = task.name;
-
-                    const redGreenBtn = document.createElement('div');
-                    const deleteBtn = document.createElement('div');
-                    const doneFlag = task.done;
-
-                    if (doneFlag) {
-                         redGreenBtn.textContent = "Done";
-                         redGreenBtn.classList.add('green');
-                    }
-                    else {
-                         redGreenBtn.textContent = "Undone";
-                         redGreenBtn.classList.add('red');
-                    }
-
-                    deleteBtn.textContent = "Delete";
-                    deleteBtn.classList.add('delete-btn');
-                    redGreenBtn.classList.add('done-btn');
-                    genericTodo.classList.add('todo');
-
-                    genericTodo.appendChild(taskName);
-
-                    genericTodo.appendChild(redGreenBtn);
-                    genericTodo.classList.add('task-div');
-
-                    genericTodo.appendChild(deleteBtn);
-                    genericTodo.appendChild(date);
-
-                    const priorityInput = document.createElement('input');
-                    priorityInput.type = "checkbox";
-                    priorityInput.id = i;
-                    const priorityInputLabel = document.createElement('label');
-                    priorityInputLabel.textContent = "Priority Task";
-                    priorityInputLabel.for = i;
-                    const priorityBox = document.createElement('div');
-                    priorityBox.classList.add('priority-box');
-                    priorityBox.appendChild(priorityInput);
-                    priorityBox.appendChild(priorityInputLabel);
-
-                    const currPriority = getPriority(i,j);
-                    if (currPriority == true) {
-                         priorityInput.checked = true;
-                    }
-
-                    genericTodo.appendChild(priorityBox);
-
-                    priorityInput.addEventListener("change", () => {
-                         changePriority(i,j);
-                    });
-
-                    mainContentDiv.appendChild(genericTodo);
-
-                    deleteBtn.addEventListener('click', () => {
-                         mainContentDiv.removeChild(genericTodo);
-                         deleteTask(i, j);
-                    });
-
-                    redGreenBtn.addEventListener('click', () => {
-                         const currTaskDone = checkTaskDone(i, j);
-                         if (currTaskDone) {
-                              redGreenBtn.classList.remove('green');
-                              redGreenBtn.classList.add('red');
-                              redGreenBtn.textContent = "Undone";
-                         }
-                         else {
-                              redGreenBtn.classList.add('green');
-                              redGreenBtn.classList.remove('red');
-                              redGreenBtn.textContent = "Done";
-                         }
-                         toggleTaskDone(i, j);
-                    })
+                    tasksExists = true ;
+                    renderTask(currTasks[j],i,j);
                }
           }
+     }
+
+     if (!tasksExists) { 
+        mainContentDiv.textContent = "The field is clear...." ;
      }
 }
 
@@ -160,99 +91,25 @@ function todayTaskGenerator() {
      let dateForToday = getTodaysDate();
      const mainContentDiv = document.querySelector('.content-container');
      mainContentDiv.textContent = " ";
-
+     let tasksExists = false; 
      for (let i = 0; i < currProjects.length; i++) {
-
-          if (currProjects[i] == undefined) continue;
-
+          if (!currProjects[i]) continue;
           let currTasks = currProjects[i].tasks;
 
           for (let j = 0; j < currTasks.length; j++) {
-
-               if (currTasks[j] == undefined) continue;
-
-               let currDate = currTasks[j].date;
+               if (!currTasks[j]) continue;
+               let currDate = currTasks.date ;
                if (currDate == dateForToday) {
-
-                    const task = currTasks[j];
-                    const genericTodo = document.createElement('div');
-                    const taskName = document.createElement('p');
-                    const date = document.createElement('p');
-                    date.textContent = task.date;
-                    taskName.textContent = task.name;
-
-                    const redGreenBtn = document.createElement('div');
-                    const deleteBtn = document.createElement('div');
-                    const doneFlag = task.done;
-
-                    if (doneFlag) {
-                         redGreenBtn.textContent = "Done";
-                         redGreenBtn.classList.add('green');
-                    }
-                    else {
-                         redGreenBtn.textContent = "Undone";
-                         redGreenBtn.classList.add('red');
-                    }
-
-                    deleteBtn.textContent = "Delete";
-                    deleteBtn.classList.add('delete-btn');
-                    redGreenBtn.classList.add('done-btn');
-                    genericTodo.classList.add('todo');
-
-                    genericTodo.appendChild(taskName);
-
-                    genericTodo.appendChild(redGreenBtn);
-                    genericTodo.classList.add('task-div');
-
-                    genericTodo.appendChild(deleteBtn);
-                    genericTodo.appendChild(date);
-
-                    const priorityInput = document.createElement('input');
-                    priorityInput.type = "checkbox";
-                    priorityInput.id = i;
-                    const priorityInputLabel = document.createElement('label');
-                    priorityInputLabel.textContent = "Priority Task";
-                    priorityInputLabel.for = i;
-                    const priorityBox = document.createElement('div');
-                    priorityBox.classList.add('priority-box');
-                    priorityBox.appendChild(priorityInput);
-                    priorityBox.appendChild(priorityInputLabel);
-
-                    const currPriority = getPriority(i,j);
-                    if (currPriority == true) {
-                         priorityInput.checked = true;
-                    }
-
-                    genericTodo.appendChild(priorityBox);
-
-                    priorityInput.addEventListener("change", () => {
-                         changePriority(i,j);
-                    });
-
-                    mainContentDiv.appendChild(genericTodo);
-
-                    deleteBtn.addEventListener('click', () => {
-                         mainContentDiv.removeChild(genericTodo);
-                         deleteTask(i, j);
-                    });
-
-                    redGreenBtn.addEventListener('click', () => {
-                         const currTaskDone = checkTaskDone(i, j);
-                         if (currTaskDone) {
-                              redGreenBtn.classList.remove('green');
-                              redGreenBtn.classList.add('red');
-                              redGreenBtn.textContent = "Undone";
-                         }
-                         else {
-                              redGreenBtn.classList.add('green');
-                              redGreenBtn.classList.remove('red');
-                              redGreenBtn.textContent = "Done";
-                         }
-                         toggleTaskDone(i, j);
-                    })
+                    tasksExists = true ;
+                    renderTask(currTasks[j],i,j);
                }
           }
      }
+
+     if (!tasksExists) { 
+        mainContentDiv.textContent = "The field is clear...." ;
+     }
+     
 }
 
 export { generateSideBar };
