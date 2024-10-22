@@ -95,10 +95,10 @@ function todayTaskGenerator() {
      for (let i = 0; i < currProjects.length; i++) {
           if (!currProjects[i]) continue;
           let currTasks = currProjects[i].tasks;
-
           for (let j = 0; j < currTasks.length; j++) {
                if (!currTasks[j]) continue;
-               let currDate = currTasks.date ;
+               let currDate = currTasks[j].date ;
+               console.log(currDate);
                if (currDate == dateForToday) {
                     tasksExists = true ;
                     renderTask(currTasks[j],i,j);

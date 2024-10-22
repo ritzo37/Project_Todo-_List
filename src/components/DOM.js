@@ -128,7 +128,7 @@ function addProject() {
           {
                name: "This is just testing stuff 2",
                priority: false,
-               date: "2024-10-10",
+               date: "2024-10-10`",
                done: false,
           }]
      }
@@ -262,14 +262,6 @@ function addTaskFunctionality() {
 
 function generateEditForm(projectIndx, taskIndx) {
 
-     const formCheck = document.querySelector('.edit-form-div');
-     if (formCheck) {
-          const currToDo = document.querySelector(`[data-task="${taskIndx}"]`);
-          const editFormEle = document.querySelector('.edit-form-ele');
-          currToDo.removeChild(formCheck);
-          editFormEle.reset();
-     }
-     else {
           const editFormDiv = document.createElement('div');
           const editFormEle = document.createElement('form');
           const inputEle = document.createElement('input');
@@ -346,7 +338,6 @@ function generateEditForm(projectIndx, taskIndx) {
 
           const currToDo = document.querySelector(`[data-task="${taskIndx}"]`);
           currToDo.appendChild(editFormDiv);
-     }
 
 }
 
@@ -414,7 +405,14 @@ function renderTask(task, projectIndx, taskIndx) {
      editBtn.textContent = "Edit";
 
      editBtn.addEventListener('click', () => {
-          generateEditForm(projectIndx, taskIndx);
+          const editFormEle = document.querySelector(`[data-task="${taskIndx}"] .edit-form-div`);
+          if (editFormEle) {
+               const currTodo = document.querySelector(`[data-task="${taskIndx}"]`)
+               currTodo.removeChild(editFormEle);
+          }
+          else {
+                generateEditForm(projectIndx,taskIndx);
+          }
      });
 
      deleteBtn.addEventListener('click', () => {
